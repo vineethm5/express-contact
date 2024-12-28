@@ -1,6 +1,6 @@
 const express =  require('express');
 const errorhandler = require('./Middleware/errorHandler');
-const connectDb= require("./config/dbConnection");
+const connectDb = require("./config/dbConnection");
 const app = express();
 
 const PORT=3030;
