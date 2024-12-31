@@ -1,16 +1,16 @@
-// const { Router } = require("express");
+asyncHandler= require("express-async-handler");
 
-const getContact = (req,res)=>{
+const getContact = asyncHandler(async (req,res)=>{
     res.header("Content-type","text/html");
     res.status(200).json({message:"get contact"});
-} 
+} );
 
-const getContacts = (req,res)=>{
+const getContacts = asyncHandler(async (req,res)=>{
     res.header("Content-type","text/html");
     res.status(200).json({message:"get all contacts"});
-} 
+} );
 
-const createContacts = (req,res)=>{
+const createContacts = asyncHandler(async (req,res)=>{
     console.log("Contact created "+req.body.name);
     const{name,phone,address}=req.body;
     if(!name || !phone || !address)
@@ -20,16 +20,16 @@ const createContacts = (req,res)=>{
     }
     res.header("Content-type","text/html");
     res.status(201).json({message:"createcontacts"});
-} 
+} );
 
-const updateContacts = (req,res)=>{
+const updateContacts = asyncHandler(async (req,res)=>{
     res.header("Content-type","text/html");
     res.status(200).json({message:"update contacts"});
-} 
+} );
 
-const deleteContacts = (req,res)=>{
+const deleteContacts = asyncHandler(async (req,res)=>{
     res.header("Content-type","text/html");
     res.status(200).json({message:"delete contacts"});
-} 
+} );
 
 module.exports={getContact,getContacts,createContacts,updateContacts,deleteContacts}
