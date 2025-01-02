@@ -1,25 +1,42 @@
-asyncHandler= require("express-async-handler");
+const asyncHandler= require("express-async-handler");
+const Contact=require("../models/contactModel")
 
 const getContact = asyncHandler(async (req,res)=>{
     res.header("Content-type","text/html");
-    res.status(200).json({message:"get contact"});
+    const contact=  await Contact.findById(req.params.id);
+    console.log(contact);
+    if(!contact)
+    {
+        res.status(404);
+        throw new Error("Contact Not found");
+    }
+
+    res.status(200).json(contact);
 } );
 
 const getContacts = asyncHandler(async (req,res)=>{
+    const contact= await Contact.find();
     res.header("Content-type","text/html");
-    res.status(200).json({message:"get all contacts"});
+    res.status(200).json({contact});
 } );
 
 const createContacts = asyncHandler(async (req,res)=>{
     console.log("Contact created "+req.body.name);
-    const{name,phone,address}=req.body;
-    if(!name || !phone || !address)
+    const{name,phone,email}=req.body;
+    if(!name || !phone || !email)
     {
         res.status(400);
         throw new Error("All fields are required");
     }
-    res.header("Content-type","text/html");
-    res.status(201).json({message:"createcontacts"});
+    const createconact = await Contact.create({
+        "name":name,
+        "phone":phone,
+        "email":email
+    }
+
+    )
+    // res.header("Content-type","text/html");
+    res.status(201).json({createconact});
 } );
 
 const updateContacts = asyncHandler(async (req,res)=>{
