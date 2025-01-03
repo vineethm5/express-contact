@@ -18,8 +18,8 @@ const errorhandler = (err,req,res,next)=>{
         res.json({title:"Not found",message:err.message,stacktrace:err.stack});
     case  CONSTANTS.SERVER_ERROR: 
         res.json({title:"Server error",message:err.message,stacktrace:err.stack});
-    default:
-        res.json({message:"No error all good"});
+    // default:
+    //     res.json({message:"No error all good"});
     }
     
 }
