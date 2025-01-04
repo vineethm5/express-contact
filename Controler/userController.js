@@ -6,19 +6,30 @@ const bcrypt = require("bcrypt");
 //@ access public
 const register= asyncHandler( async (req,res)=>
 {
-    const {username,email,password} = req.body;
-    if(!username || !email || !password)
+    
+    const {username,useremail,password} = req.body;
+    if(!username || !useremail || !password)
     {
         res.status(400);
         throw new Error("All fileds are mandatory");
     }
-    const userAvailable = User.findOne({email});
-    if(!userAvailable)
+    const userAvailable = User.findOne({useremail});
+    // console.log("usdfbjd",userAvailable);
+    if(userAvailable)
     {
         res.status(400);
-        throw new Error("Email id is alreday exists");
+        throw Error("Email id is alreday exists");
     }
-    res.status(200).json({message:"user signup"});
+
+    const hashpasswword = await bcrypt.hash(password,10);
+    console.log("hash password is ",hashpasswword);
+    const createuser= await User.create({
+        "username":username,
+        "useremail":useremail,
+        "passwword":hashpasswword,
+    });
+
+    res.status(200).json({Name:User.username,Email:User.useremail});
 });
 
 //@ desc user registration
