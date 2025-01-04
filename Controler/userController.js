@@ -6,15 +6,15 @@ const bcrypt = require("bcrypt");
 //@ access public
 const register= asyncHandler( async (req,res)=>
 {
-    
+
     const {username,useremail,password} = req.body;
     if(!username || !useremail || !password)
     {
-        res.status(400);
+        // res.status(400);
         throw new Error("All fileds are mandatory");
     }
-    const userAvailable = User.findOne({useremail});
-    // console.log("usdfbjd",userAvailable);
+    // console.log("enmailsdsd",useremail);
+    const userAvailable = await User.findOne({useremail});
     if(userAvailable)
     {
         res.status(400);
@@ -22,14 +22,14 @@ const register= asyncHandler( async (req,res)=>
     }
 
     const hashpasswword = await bcrypt.hash(password,10);
-    console.log("hash password is ",hashpasswword);
+    // console.log("hash password is ",hashpasswword);
     const createuser= await User.create({
         "username":username,
         "useremail":useremail,
         "passwword":hashpasswword,
     });
 
-    res.status(200).json({Name:User.username,Email:User.useremail});
+    res.status(200).json({"Name":createuser.username,"Email":createuser.useremail});
 });
 
 //@ desc user registration
@@ -37,7 +37,17 @@ const register= asyncHandler( async (req,res)=>
 //@ access public 
 
 const login= asyncHandler(async(req,res)=>{
-    res.status(200).json({message:"user login"});
+    const {username,password}=req.body;
+    const finduser= await User.findOne({username});
+    if(!finduser)
+    {
+        res.status(404);
+        throw new Error("User Doesnot exitst");
+    }
+    else
+    {
+        res.status(200).send(`Hi ${username}`);
+    }
 });
 
 //@ desc user detail
