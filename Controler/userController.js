@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt= require("jsonwebtoken");
 //@ desc user registration
 //@ route POST user/api/register
 //@ access public
@@ -37,16 +38,23 @@ const register= asyncHandler( async (req,res)=>
 //@ access public 
 
 const login= asyncHandler(async(req,res)=>{
-    const {username,password}=req.body;
-    const finduser= await User.findOne({username});
-    if(!finduser)
+    const {useremail,password}=req.body;
+    const finduser= await User.findOne({useremail});
+    if(finduser && (await bcrypt.compare(password,finduser.passwword)))
     {
-        res.status(404);
-        throw new Error("User Doesnot exitst");
+        const AccessToken= jwt.sign({
+            user:{
+                username:finduser.username,
+                email:finduser.useremail,
+                id:finduser.id
+            }
+        },process.env.ACCESS_TOKEN_SECRET,{expiresIn:"1m"});
+        res.status(200).json({AccessToken})
     }
     else
     {
-        res.status(200).send(`Hi ${username}`);
+        res.status(401);
+        throw new Error("User Doesnot exitst");
     }
 });
 
