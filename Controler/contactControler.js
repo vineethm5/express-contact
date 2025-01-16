@@ -42,11 +42,12 @@ const createContacts = asyncHandler(async (req,res)=>{
         res.status(400);
         throw new Error("All fields are required");
     }
+    console.log("this is useid",req.user.id);
     const createconact = await Contact.create({
         "name":name,
         "phone":phone,
         "email":email,
-        user_id:req.user.id
+        "user_id":req.user.id
     }
 
     )
@@ -66,6 +67,11 @@ const updateContacts = asyncHandler(async (req,res)=>{
     {
         res.status(404);
         throw new Error("Contact Not found");
+    }
+    if(!contact.user_id.toString() === req.user.id )
+    {
+        res.status(401);
+        throw new Error("Access Denied")
     }
     const updatedcontact= await Contact.findByIdAndUpdate(
         req.params.id,
@@ -90,7 +96,13 @@ const deleteContacts = asyncHandler(async (req,res)=>{
         res.status(404);
         throw new Error("Contact Not found");
     }
-    await Contact.remove();
+    if(!contact.user_id.toString() === req.user.id )
+    {
+            res.status(401);
+            throw new Error("Access Denied")
+    }
+
+    await Contact.deleteOne({user_id:req.user.id});
     res.status(200).json(contact);
 } );
 
