@@ -24,7 +24,7 @@ const getContact = asyncHandler(async (req,res)=>{
 //@ access public
 
 const getContacts = asyncHandler(async (req,res)=>{
-    const contact= await Contact.find();
+    const contact= await Contact.find({user_id:req.user.id});
     res.header("Content-type","text/html");
     res.status(200).json({contact});
 } );
@@ -45,7 +45,8 @@ const createContacts = asyncHandler(async (req,res)=>{
     const createconact = await Contact.create({
         "name":name,
         "phone":phone,
-        "email":email
+        "email":email,
+        user_id:req.user.id
     }
 
     )

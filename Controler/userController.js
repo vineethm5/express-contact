@@ -5,6 +5,10 @@ const jwt= require("jsonwebtoken");
 //@ desc user registration
 //@ route POST user/api/register
 //@ access public
+
+// asyncHandler:  Wraps the middleware function, ensuring errors inside async logic are handled properly.
+//express-async-handler: A utility that simplifies handling asynchronous code in Express. It ensures that errors from asynchronous functions are passed to Express's error-handling middleware, avoiding the need for try-catch blocks in every route/middleware.
+
 const register= asyncHandler( async (req,res)=>
 {
 
@@ -48,7 +52,7 @@ const login= asyncHandler(async(req,res)=>{
                 email:finduser.useremail,
                 id:finduser.id
             }
-        },process.env.ACCESS_TOKEN_SECRET,{expiresIn:"1m"});
+        },process.env.ACCESS_TOKEN_SECRET,{expiresIn:"5m"});
         res.status(200).json({AccessToken})
     }
     else
@@ -60,9 +64,9 @@ const login= asyncHandler(async(req,res)=>{
 
 //@ desc user detail
 //@ route POST user/api/userdetail
-//@ access private 
+//@ access protected 
 
 const userdetail=asyncHandler( async (req,res)=>{
-    res.status(200).json({message:"user Detail"});
+    res.status(200).json(req.user);
 });
 module.exports={register,login,userdetail}
